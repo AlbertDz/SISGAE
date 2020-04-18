@@ -1,0 +1,60 @@
+<div fxLayout="row">
+	<div fxFlex.gt-sm="100%">
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Datos bancarios</mat-card-title>
+
+				<div fxLayout="row">
+					<table mat-table [dataSource]="datosBancarios" class="mat-elevation-z2">
+
+					  <ng-container matColumnDef="fecha">
+					    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+					    <td mat-cell *matCellDef="let element"> {{element.fecha | date: 'dd/MM/yyyy'}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="banco">
+					    <th mat-header-cell *matHeaderCellDef> Banco </th>
+					    <td mat-cell *matCellDef="let element"> {{element.banco}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="referencia">
+					    <th mat-header-cell *matHeaderCellDef> Referencia </th>
+					    <td mat-cell *matCellDef="let element"> {{element.referencia}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="monto">
+					    <th mat-header-cell *matHeaderCellDef> Monto </th>
+					    <td mat-cell *matCellDef="let element"> {{element.monto | number: '.2'}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="borrar">
+					    <th mat-header-cell *matHeaderCellDef></th>
+					    <td mat-cell *matCellDef="let element">
+					    	<button mat-icon-button color="warn" matTooltip="Eliminar" matTooltipPosition="right" (click)="borrar(element)">
+                                <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                            </button>
+					    </td>
+					  </ng-container>
+
+					  <tr mat-header-row *matHeaderRowDef="displayedDatosBancarios"></tr>
+					  <tr mat-row *matRowDef="let row; columns: displayedDatosBancarios;"></tr>
+					</table>
+				</div>
+
+				<div style="align-items: center; display: flex; justify-content: space-between; margin-top: 30px;">
+				    <span *ngIf="montoBanco != 0.00">
+				  		<button mat-raised-button color="accent" (click)="procesarPlanilla()">Procesar</button>
+				    </span>
+					<p><strong style="margin-right: 5px;">Total:</strong>{{montoTotal | number: '.2'}}</p>
+				    <p><strong style="margin-right: 5px;">Cancelado:</strong>{{montoBanco | number: '.2'}}</p>
+
+				    <p *ngIf="montoDiferencia === 0" style="color: green;"><strong style="margin-right: 5px; color: black;">Diferencia:</strong>{{montoDiferencia | number: '.2'}}</p>
+				    <p *ngIf="montoDiferencia < 0" style="color: red;"><strong style="margin-right: 5px; color: black;">Diferencia:</strong>{{montoDiferencia | number: '.2'}}</p>
+				    <p *ngIf="montoDiferencia > 0" style="color: blue;"><strong style="margin-right: 5px; color: black;">Diferencia:</strong>{{montoDiferencia | number: '.2'}}</p>
+
+				    <button mat-mini-fab color="accent" style="margin: 5px; margin-left: 50px;" (click)="openDialog()">+</button>
+				</div>
+			</mat-card-content>        
+		</mat-card>
+	</div>
+</div>

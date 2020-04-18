@@ -1,0 +1,46 @@
+<div class="main-container">
+    <mat-toolbar color="accent" class="topbar telative">       
+        <button mat-icon-button (click)="snav.toggle()" value="sidebarclosed" class="mr-5">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <div class="navbar-header">
+            <a class="navbar-brand" routerLink="/inicio">
+                <!-- <b>
+                    <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo">
+                    <img src="assets/images/logo-light-icon.png" alt="homepage" class="light-logo">
+                </b> -->
+                <span fxShow="false" fxShow.gt-xs>
+                 <!-- <img src="assets/images/logo-text.png" alt="homepage" class="dark-logo">
+                 <img src="assets/images/logo-light-text.png" class="light-logo" alt="homepage"> -->
+                 <h1 class="h1 text-white font-weight-bold">SIPO</h1>
+                </span>
+            </a>
+        </div>
+
+        <span fxFlex></span>
+
+        <app-header></app-header>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 0 : 0">
+
+        <mat-sidenav #snav id="snav" class="dark-sidebar pl-xs" [mode]="mobileQuery.matches ? 'side' : 'over'" fixedTopGap="0" [opened]="mobileQuery.matches" [disableClose]="mobileQuery.matches"  >
+            
+                <app-sidebar></app-sidebar>
+               
+            
+        </mat-sidenav>
+
+        <mat-sidenav-content class="page-wrapper">
+                 
+                <div class="page-content">
+                   
+                        <router-outlet><app-spinner></app-spinner></router-outlet>
+                    
+                </div>    
+               
+        </mat-sidenav-content>
+
+    </mat-sidenav-container>
+</div>

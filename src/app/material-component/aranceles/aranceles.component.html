@@ -1,0 +1,119 @@
+<mat-card>
+    <mat-card-content>
+    <mat-card-title>Seleccionar postgrado</mat-card-title>
+    <mat-card-subtitle>Seleccione el postgrado al cual se va a realizar la relación de aranceles</mat-card-subtitle>
+
+        <mat-accordion class="example-headers-align">
+            <mat-expansion-panel hideToggle="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Postgrado </mat-panel-title>
+                    <mat-panel-description style="display: flex; justify-content: flex-end;">
+                        <mat-icon>view_list</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <div style="display: flex; justify-content: space-between;">
+                	<mat-form-field style="margin-right: 5px;">
+	                    <mat-select placeholder="Postgrado" [(ngModel)]="valor" (selectionChange)="valorPostgrado(valor)">
+	                        <mat-option *ngFor="let list of postgrado" [value]="list.value">{{list.viewValue}}</mat-option>
+	                    </mat-select>
+	                </mat-form-field>
+
+	                <mat-form-field style="margin-left: 5px;">
+	                    <mat-select placeholder="Carrera">
+	                        <mat-option *ngFor="let list of carrera" [value]="list.value">{{list.viewValue}}</mat-option>
+	                    </mat-select>
+	                </mat-form-field>
+	            </div>
+
+				<div style="display: flex; justify-content: space-between;">
+	                <mat-form-field style="margin-right: 5px;">
+	                    <mat-select placeholder="Cohorte">
+	                        <mat-option value="2020">2020</mat-option>
+	                    </mat-select>
+	                </mat-form-field>
+
+	                <mat-form-field style="margin-left: 5px;">
+	                    <mat-select placeholder="Mes">
+	                        <mat-option value="enero">Enero</mat-option>
+	                    </mat-select>
+	                </mat-form-field>
+                </div>
+
+                <mat-action-row>
+                    <button mat-raised-button color="accent">Continuar</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
+</mat-card>
+
+<div fxLayout="row">
+	<div fxFlex.gt-sm="100%">
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Relación de aranceles correspondientes al mes Enero 2020</mat-card-title>
+				<mat-card-subtitle>Maestría, Ciencias de la educación, Périodo académico 2020-I</mat-card-subtitle>
+
+				<div fxLayout="row">
+					<table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+					  <ng-container matColumnDef="posicion">
+					    <th mat-header-cell *matHeaderCellDef> N° </th>
+					    <td mat-cell *matCellDef="let element"> {{element.posicion}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="estudiante">
+					    <th mat-header-cell *matHeaderCellDef> Nombres y Apellidos </th>
+					    <td mat-cell *matCellDef="let element"> {{element.estudiante}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="arancel">
+					    <th mat-header-cell *matHeaderCellDef> N° Arancel </th>
+					    <td mat-cell *matCellDef="let element"> {{element.arancel}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="cedula">
+					    <th mat-header-cell *matHeaderCellDef> Cédula </th>
+					    <td mat-cell *matCellDef="let element"> {{element.cedula}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="concepto">
+					    <th mat-header-cell *matHeaderCellDef> Concepto </th>
+					    <td mat-cell *matCellDef="let element"> {{element.concepto}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="fecha">
+					    <th mat-header-cell *matHeaderCellDef> Fecha </th>
+					    <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="banco">
+					    <th mat-header-cell *matHeaderCellDef> Banco Emisor </th>
+					    <td mat-cell *matCellDef="let element"> {{element.banco}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="referencia">
+					    <th mat-header-cell *matHeaderCellDef> N° Referencia </th>
+					    <td mat-cell *matCellDef="let element"> {{element.referencia}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="monto">
+					    <th mat-header-cell *matHeaderCellDef> Monto </th>
+					    <td mat-cell *matCellDef="let element"> {{element.monto}} </td>
+					  </ng-container>
+
+					  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+					</table>
+				</div>
+				<div style="align-items: center; display: flex; justify-content: space-between; margin-top: 30px;">
+					<span>
+						<button mat-raised-button color="accent">Imprimir</button>
+					</span>
+					<p style="margin-right: 50px;"><strong>Total recaudos:</strong> 141.000,00</p>
+				</div>
+			</mat-card-content>        
+		</mat-card>
+	</div>
+</div>

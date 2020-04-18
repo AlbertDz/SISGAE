@@ -1,0 +1,9 @@
+table {
+	margin-top: 15px;
+ 	width: 100%;
+}
+
+table tr:hover td {
+	background-color: #F5F5F5;
+	cursor: pointer;
+}

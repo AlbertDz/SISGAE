@@ -1,0 +1,9 @@
+<h3 mat-dialog-title>Desea generar una planilla de aranceles de <strong>{{data.postgrado}} - {{data.carrera}}</strong> para:</h3>
+<div mat-dialog-content>
+  <p><strong>Nombre:</strong> {{data.primerNombre}} {{data.segundoNombre}} {{data.primerApellido}} {{data.segundoApellido}}</p>
+  <p><strong>Cedula:</strong> {{data.cedula}}</p>
+</div>
+<div mat-dialog-actions style="display: flex; justify-content: space-between;">
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Aceptar</button>
+</div>

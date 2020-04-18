@@ -1,0 +1,10 @@
+<h3 mat-dialog-title>Ingrese la cantidad</h3>
+<div mat-dialog-content>
+  <mat-form-field>
+      <input type="number" min="1" matInput placeholder="Cantidad" [(ngModel)]="cantidad" autofocus required>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions style="display: flex; justify-content: space-between;">
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="cantidad" cdkFocusInitial>Aceptar</button>
+</div>

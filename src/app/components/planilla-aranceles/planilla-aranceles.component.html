@@ -1,0 +1,76 @@
+<div fxLayout="row" *ngIf="estudiante">
+	<div fxFlex.gt-sm="100%">
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Planilla de aranceles</mat-card-title>
+				<mat-card-subtitle>Cohorte 2020</mat-card-subtitle>
+
+				<div fxLayout="row">
+					<div fxFlex.gt-sm="50%">
+						<mat-list>
+							<mat-list-item>
+								<h3 matLine>Cédula: {{estudiante.cedula}}</h3>
+								<p matLine class="text-muted">Postgrado: {{estudiante.postgrado}}</p>
+								<!-- <p matLine class="text-muted">Mensión: Cs Administrativas</p> -->
+							</mat-list-item>
+						</mat-list>
+					</div>
+					<div fxFlex.gt-sm="50%">
+						<mat-list>
+							<mat-list-item>
+								<h3 matLine>Nombre: {{estudiante.primerNombre}} {{estudiante.primerApellido}}</h3>
+								<p matLine class="text-muted">Area: {{estudiante.carrera}}</p>  
+							</mat-list-item>
+						</mat-list>
+					</div>
+				</div>
+
+				<div fxLayout="row">
+					<table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+					  <ng-container matColumnDef="codigo">
+					    <th mat-header-cell *matHeaderCellDef> Codigo </th>
+					    <td mat-cell *matCellDef="let element"> {{element.codigo}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="concepto">
+					    <th mat-header-cell *matHeaderCellDef> Concepto </th>
+					    <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="cantidad">
+					    <th mat-header-cell *matHeaderCellDef> Cant </th>
+					    <td mat-cell *matCellDef="let element"> {{element.cantidad}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="monto">
+					    <th mat-header-cell *matHeaderCellDef> Monto </th>
+					    <td mat-cell *matCellDef="let element"> {{element.monto | number: '.2'}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="subtotal">
+					    <th mat-header-cell *matHeaderCellDef> Subtotal </th>
+					    <td mat-cell *matCellDef="let element"> {{element.subtotal | number: '.2'}} </td>
+					  </ng-container>
+
+					  <ng-container matColumnDef="borrar">
+					    <th mat-header-cell *matHeaderCellDef></th>
+					    <td mat-cell *matCellDef="let element">
+					    	<button mat-icon-button color="warn" matTooltip="Eliminar" matTooltipPosition="right" (click)="borrar(element)">
+                                <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                            </button>
+					    </td>
+					  </ng-container>
+
+					  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+					  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+					</table>
+				</div>
+				<div style="align-items: center; display: flex; justify-content: flex-end;">
+					<p><strong>Total:</strong> {{montoTotal | number: '.2'}}</p>
+					<button mat-mini-fab color="accent" (click)="openDialog()" style="margin: 5px; margin-left: 100px;">+</button>
+				</div>
+			</mat-card-content>        
+		</mat-card>
+	</div>
+</div>

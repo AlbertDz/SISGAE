@@ -1,0 +1,70 @@
+<mat-card>
+    <mat-card-content>
+    <mat-card-title>Consultar arancel</mat-card-title>
+    <mat-card-subtitle>Ingrese la cédula del estudiante a consultar</mat-card-subtitle>
+
+        <mat-accordion class="example-headers-align">
+            <mat-expansion-panel hideToggle="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Esudiante </mat-panel-title>
+                    <mat-panel-description style="display: flex; justify-content: flex-end;">
+                        <mat-icon>person</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+            	<mat-form-field>
+                    <input type="number" matInput placeholder="Cédula" [(ngModel)]="cedula" required>
+                </mat-form-field>
+
+                <mat-action-row>
+                    <button mat-raised-button color="accent" (click)="buscarAranceles()">Consultar</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="planillas.length != 0">
+	<mat-card-content>
+      <div class="">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="cedula">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+            <td mat-cell *matCellDef="let row"> {{row.estudiante.cedula}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell *matCellDef="let row"> {{row.estudiante.primerNombre}} {{row.estudiante.primerApellido}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="postgrado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Postgrado </th>
+            <td mat-cell *matCellDef="let row"> {{row.estudiante.postgrado}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="carrera">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrera </th>
+            <td mat-cell *matCellDef="let row"> {{row.estudiante.carrera}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="arancel">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> N° Arancel </th>
+            <td mat-cell *matCellDef="let row"> {{row.numeroArancel}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="concepto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto </th>
+            <td mat-cell *matCellDef="let row"> {{row.conceptos[0].descripcion}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openDialog(row)">
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+  </mat-card-content>
+</mat-card>
