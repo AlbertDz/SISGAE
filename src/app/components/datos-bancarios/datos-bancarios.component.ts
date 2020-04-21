@@ -72,7 +72,7 @@ export class DatosBancariosComponent implements OnInit {
         this.montoBanco -= referencia.monto;
         this.enviarTotal(this.montoBanco);
 
-        this.BancosService.deleteReferncia(referencia);
+        this.BancosService.deleteReferencia(referencia);
 
         this.datosBancarios._updateChangeSubscription();
       }
@@ -109,7 +109,7 @@ export class Referencia implements OnInit {
 
   myForm: FormGroup;
 
-  bancos: Banco[];
+  bancos: Banco[] = [];
   datos: DatosReferencia;
   banco: string;
 
@@ -141,7 +141,7 @@ export class Referencia implements OnInit {
   private _filter(value: string): Banco[] {
     const filterValue = value.toLowerCase();
 
-    return this.bancos.filter(option => option.nombre.toLowerCase().includes(filterValue));
+    return this.bancos.filter(option => option.nombre_banco.toLowerCase().includes(filterValue));
   }
 
   onNoClick(): void {

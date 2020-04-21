@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -14,7 +14,6 @@ import { DatoPlanilla } from '../../services/aranceles/planilla-arancel';
 })
 export class ConsultarComponent implements OnInit {
 
-  cedula: number;
   planillas: DatoPlanilla[] = [];
 
   displayedColumns: string[] = ['cedula', 'nombre', 'postgrado', 'carrera', 'arancel', 'concepto'];
@@ -23,27 +22,30 @@ export class ConsultarComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
+  @Input() cedula: number;
+  @Output() cargandoDatos = new EventEmitter<boolean>();
+
   constructor(
   	private ArancelesService: ArancelesService,
   	private _snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.planillas);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+    this.ArancelesService.getPlanillas(this.cedula)
+      .subscribe(planilla => this.planillas = planilla);
 
-  buscarAranceles() {
-  	this.ArancelesService.getPlanillas(this.cedula)
-  		.subscribe(planilla => this.planillas = planilla);
-
-  	if (this.planillas.length != 0) { this.dataSource._updateChangeSubscription() }
-  	else {
-  		this._snackBar.open(`¡No se encontrarón resultados para ${this.cedula}!`, '', {
-	        duration: 3000,
-	    });
-  	}
+    if (this.planillas.length != 0) {
+      this.dataSource = new MatTableDataSource(this.planillas);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.cargandoDatos.emit(true);
+    }
+    else {
+      this._snackBar.open(`¡No se encontrarón resultados para ${this.cedula}!`, '', {
+          duration: 3000,
+      });
+      this.cargandoDatos.emit(false);
+    }
   }
 
   openDialog(planilla: DatoPlanilla): void {

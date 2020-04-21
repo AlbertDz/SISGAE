@@ -1,29 +1,3 @@
-<mat-card>
-    <mat-card-content>
-    <mat-card-title>Consultar arancel</mat-card-title>
-    <mat-card-subtitle>Ingrese la cédula del estudiante a consultar</mat-card-subtitle>
-
-        <mat-accordion class="example-headers-align">
-            <mat-expansion-panel hideToggle="true">
-                <mat-expansion-panel-header>
-                    <mat-panel-title> Esudiante </mat-panel-title>
-                    <mat-panel-description style="display: flex; justify-content: flex-end;">
-                        <mat-icon>person</mat-icon>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-
-            	<mat-form-field>
-                    <input type="number" matInput placeholder="Cédula" [(ngModel)]="cedula" required>
-                </mat-form-field>
-
-                <mat-action-row>
-                    <button mat-raised-button color="accent" (click)="buscarAranceles()">Consultar</button>
-                </mat-action-row>
-            </mat-expansion-panel>
-        </mat-accordion>
-    </mat-card-content>
-</mat-card>
-
 <mat-card *ngIf="planillas.length != 0">
 	<mat-card-content>
       <div class="">

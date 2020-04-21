@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { retry, catchError, map } from 'rxjs/operators'
+import { catchError, map } from 'rxjs/operators'
+import { CookieService } from 'ngx-cookie-service';
 
 import { Arancel } from './arancel';
 import { Concepto } from './concepto';
@@ -16,20 +17,26 @@ import { URL_SERVICIOS } from '../../config/config';
 })
 export class ArancelesService {
 
+  constructor(
+    public http: HttpClient,
+    private cookie: CookieService
+  ) { }
+
   CONCEPTOS: Concepto[] = [];
   PLANILLAS: DatoPlanilla[] = [];
 
   httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.getToken()}`
     })
   }
 
-  constructor(
-    public http: HttpClient,
-  ) { }
+  getToken() {
+    return this.cookie.get('token');
+  }
 
-  getAranceles(): Observable<Arancel[]> {
+  getConceptos(): Observable<Arancel[]> {
     let url = `${URL_SERVICIOS}/conceptos`;
 
     return this.http.get(url, this.httpOptions)
@@ -37,7 +44,7 @@ export class ArancelesService {
         catchError(this.handleError))
   }
 
-  addArancel(arancel: Arancel): Observable<any> {
+  addConcepto(arancel: Arancel): Observable<any> {
     let url = `${URL_SERVICIOS}/conceptos`;
 
     return this.http.post<Arancel>(url, arancel, this.httpOptions)
@@ -45,7 +52,15 @@ export class ArancelesService {
         catchError(this.handleError))
   }
 
-  deleteArancel(arancel: Arancel): Observable<any> {
+  updateConcepto(arancel: Arancel): Observable<any> {
+    let url = `${URL_SERVICIOS}/conceptos/${arancel.codigo}`;
+
+    return this.http.put(url, arancel, this.httpOptions)
+      .pipe(map((resp: any) => { return resp }),
+        catchError(this.handleError))
+  }
+
+  deleteConcepto(arancel: Arancel): Observable<any> {
     let url = `${URL_SERVICIOS}/conceptos/${arancel.codigo}`;
 
     return this.http.delete(url, this.httpOptions)
@@ -53,11 +68,11 @@ export class ArancelesService {
         catchError(this.handleError))
   }
 
-  addConcepto(concepto: Concepto) {
-  	this.CONCEPTOS.push(concepto);
+  nuevoConcepto(concepto: Concepto) {
+    this.CONCEPTOS.push(concepto);
   }
 
-  deleteConcepto(concepto: Concepto) {
+  borrarConcepto(concepto: Concepto) {
     const INDICE = this.CONCEPTOS.findIndex(element => element.codigo === concepto.codigo);
     this.CONCEPTOS.splice(INDICE, 1);
   }

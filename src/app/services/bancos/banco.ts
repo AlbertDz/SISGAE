@@ -1,3 +1,4 @@
 export class Banco {
-    nombre: string;
+	id_banco: number;
+    nombre_banco: string;
 }

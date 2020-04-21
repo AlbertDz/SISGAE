@@ -5,20 +5,20 @@ import { CookieService } from 'ngx-cookie-service';
 @Injectable({
   providedIn: 'root'
 })
-export class SesionActiveService implements CanActivate {
+export class SesionCloseService implements CanActivate {
 
   constructor(
     private router: Router,
-      private cookie: CookieService,
+    private cookie: CookieService,
   ) { }
 
   canActivate(): boolean {
     if ( this.cookie.get('token') ) {
-      return true;
-    } else {
-      alert('¡Debe iniciar sesión!');
-      this.router.navigate(['/login']);
+      alert('¡Debe cerrar sesión!');
+      this.router.navigate(['/inicio']);
       return false;
+    } else {
+      return true;
     }
   }
 }

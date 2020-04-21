@@ -7,8 +7,8 @@
 		<mat-form-field> 
 		    <input placeholder="Banco" aria-label="Number" [(ngModel)]="banco" matInput [formControl]="myControl" [matAutocomplete]="auto" required> 
 		    <mat-autocomplete #auto="matAutocomplete">
-		        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.nombre">
-		        	{{option.nombre}}
+		        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.nombre_banco">
+		        	{{option.nombre_banco}}
 		        </mat-option> 
 		    </mat-autocomplete>
 		</mat-form-field>

@@ -45,7 +45,7 @@ export class PlanillaArancelesComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
 
       if (result != null) {
-        this.ArancelesService.addConcepto(result);
+        this.ArancelesService.nuevoConcepto(result);
 
         this.dataSource._updateChangeSubscription();
 
@@ -74,7 +74,7 @@ export class PlanillaArancelesComponent implements OnInit {
         this.montoTotal -= concepto.subtotal;
         this.enviarTotal(this.montoTotal);
 
-        this.ArancelesService.deleteConcepto(concepto);
+        this.ArancelesService.borrarConcepto(concepto);
 
         this.dataSource._updateChangeSubscription();
       }
@@ -99,6 +99,7 @@ export class AddArancelesComponent implements OnInit {
 
   aranceles: Arancel[];
   concepto: Concepto;
+  cargando: boolean = true;
 
   displayedColumns: string[] = ['codigo', 'concepto', 'monto'];
   dataSource: MatTableDataSource<Arancel>;
@@ -110,11 +111,7 @@ export class AddArancelesComponent implements OnInit {
       public dialogRef: MatDialogRef<AddArancelesComponent>,
       private ArancelesService: ArancelesService,
       public dialog: MatDialog,
-    ) {
-    this.ArancelesService.getAranceles()
-      .subscribe(aranceles => this.aranceles = aranceles);
-    this.dataSource = new MatTableDataSource(this.aranceles);
-  }
+    ) {}
 
   openDialog(arancel: Arancel): void {
     const dialogRef = this.dialog.open(ConfirmarCantidad, {
@@ -143,10 +140,12 @@ export class AddArancelesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.ArancelesService.getAranceles()
+    this.ArancelesService.getConceptos()
       .subscribe(aranceles => {
-        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al traer los conceptos de la base de datos!', 'error') }
-          else { this.datosTabla(aranceles) }
+        this.cargando = false;
+
+        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al mostrar los conceptos!', 'error') }
+          else { this.datosTabla(aranceles) };
       });
   }
 

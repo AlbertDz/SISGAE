@@ -1,47 +1,111 @@
-<mat-card *ngIf="!verPlanilla">
-	<mat-card-content>
-      <mat-form-field>
-        <mat-label>Filtrar</mat-label>
-        <input matInput (keyup)="applyFilter($event)">
-      </mat-form-field>
+<div *ngIf="!verPlanilla">
+  <mat-card>
+      <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+      <mat-card-content>
+        <mat-card-title style="display: flex; justify-content: space-between;">
+          <div>Arancel</div>
+          <mat-slide-toggle color="accent" [(ngModel)]="consultar" style="color: rgb(150,150,150)"> Consultar </mat-slide-toggle>
+        </mat-card-title>
+        <mat-card-subtitle>Crear o consultar estudiante por medio de la cédula de identidad</mat-card-subtitle>
 
-      <div class="">
-        <table mat-table [dataSource]="dataSource" matSort>
+        <mat-accordion class="example-headers-align">
+            <mat-expansion-panel hideToggle="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Esudiante </mat-panel-title>
+                    <mat-panel-description style="display: flex; justify-content: flex-end;">
+                        <mat-icon>person</mat-icon>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
 
-          <ng-container matColumnDef="cedula">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
-            <td mat-cell *matCellDef="let row"> {{row.cedula}} </td>
-          </ng-container>
+              <mat-form-field>
+                    <input type="number" matInput placeholder="Cédula" [(ngModel)]="cedula" required>
+                </mat-form-field>
 
-          <ng-container matColumnDef="nombres">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombres </th>
-            <td mat-cell *matCellDef="let row"> {{row.primerNombre}} {{row.segundoNombre}}</td>
-          </ng-container>
+                <mat-action-row>
+                    <button mat-raised-button color="accent" (click)="buscarEstudiante()">Buscar</button>
+                </mat-action-row>
+            </mat-expansion-panel>
+        </mat-accordion>
+      </mat-card-content>
+  </mat-card>
 
-          <ng-container matColumnDef="apellidos">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
-            <td mat-cell *matCellDef="let row"> {{row.primerApellido}} {{row.segundoApellido}}</td>
-          </ng-container>
+  <mat-card *ngIf="buscar">
+    <mat-card-content>
+        <div class="">
+          <table mat-table [dataSource]="dataSource" *ngIf="verArancel">
 
-          <ng-container matColumnDef="postgrado">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Postgrado </th>
-            <td mat-cell *matCellDef="let row"> {{row.postgrado}} </td>
-          </ng-container>
+            <ng-container matColumnDef="cedula">
+              <th mat-header-cell *matHeaderCellDef> Cédula </th>
+              <td mat-cell *matCellDef="let row"> {{row.cedula}} </td>
+            </ng-container>
 
-          <ng-container matColumnDef="carrera">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrera </th>
-            <td mat-cell *matCellDef="let row"> {{row.carrera}} </td>
-          </ng-container>
+            <ng-container matColumnDef="nombres">
+              <th mat-header-cell *matHeaderCellDef> Nombres </th>
+              <td mat-cell *matCellDef="let row"> {{row.primer_nombre}} {{row.segundo_nombre}}</td>
+            </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openDialog(row)">
-          </tr>
-        </table>
+            <ng-container matColumnDef="apellidos">
+              <th mat-header-cell *matHeaderCellDef> Apellidos </th>
+              <td mat-cell *matCellDef="let row"> {{row.primer_apellido}} {{row.segundo_apellido}}</td>
+            </ng-container>
 
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-      </div>
-  </mat-card-content>
-</mat-card>
+            <ng-container matColumnDef="postgrado">
+              <th mat-header-cell *matHeaderCellDef> Postgrado </th>
+              <td mat-cell *matCellDef="let row"> {{row.nombre_postgrado}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="carrera">
+              <th mat-header-cell *matHeaderCellDef> Carrera </th>
+              <td mat-cell *matCellDef="let row"> {{row.nombre_carrera}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openDialog(row)">
+            </tr>
+          </table>
+
+          <table mat-table [dataSource]="dataSources" matSort *ngIf="verConsulta">
+
+            <ng-container matColumnDef="cedula">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+              <td mat-cell *matCellDef="let row"> {{row.estudiante.cedula}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+              <td mat-cell *matCellDef="let row"> {{row.estudiante.primer_nombre}} {{row.estudiante.primer_apellido}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="postgrado">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Postgrado </th>
+              <td mat-cell *matCellDef="let row"> {{row.estudiante.nombre_postgrado}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="carrera">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrera </th>
+              <td mat-cell *matCellDef="let row"> {{row.estudiante.nombre_carrera}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="arancel">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> N° Arancel </th>
+              <td mat-cell *matCellDef="let row"> {{row.numeroArancel}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="concepto">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto </th>
+              <td mat-cell *matCellDef="let row"> {{row.conceptos[0].descripcion}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumn;" (click)="openDialog(row)">
+            </tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" *ngIf="verConsulta"></mat-paginator>
+        </div>
+    </mat-card-content>
+  </mat-card>
+</div>
 
 <div *ngIf="verPlanilla">
   <span style="padding-left: 20px;">

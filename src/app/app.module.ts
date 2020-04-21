@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { AppRoutes } from './app.routing';
@@ -13,6 +13,8 @@ import { AppHeaderComponent } from './layouts/full/header/header.component';
 import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMaterialModule } from './demo-material-module';
+import { CookieService } from 'ngx-cookie-service';
+import { ModalsModule } from './modals/modals.module';
 
 import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
@@ -36,8 +38,11 @@ import { LoginComponent } from './login/login.component';
     HttpClientModule,
     SharedModule,
     RouterModule.forRoot(AppRoutes, { scrollPositionRestoration: 'enabled' }),
+    ReactiveFormsModule,
+    ModalsModule
   ],
   providers: [
+    CookieService,
     {
       provide: LocationStrategy,
       useClass: PathLocationStrategy

@@ -1,1 +1,25 @@
-<p>login works!</p>
+<div class="spinner-bg" *ngIf="cargando">
+  <mat-spinner></mat-spinner>
+</div>
+
+<section class="container">
+    <div class="wrapper fadeInDown">
+      <div class="formContent">
+
+        <div class="fadeIn first">
+          <img src="assets/images/users/user.png" id="icon" alt="User Icon" />
+        </div>
+
+        <form [formGroup]="myForm" (submit)="login()">
+          <input formControlName="cedula" type="text" id="cedula" class="fadeIn second" name="cedula" placeholder="Cedula" autocomplete="off" required>
+          <input formControlName="password" type="password" id="pass" class="fadeIn third" name="pass" placeholder="Contraseña" autocomplete="off" required>
+          <input [disabled]="myForm.invalid" color="accent" type="submit" class="fadeIn fourth" value="Ingresar" style="cursor: pointer;">
+        </form>
+
+        <div id="formFooter">
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+    
+      </div>
+    </div>
+</section>

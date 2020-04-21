@@ -22,6 +22,9 @@ export class DashboardComponent implements AfterViewInit {
 	ngAfterViewInit() {}
 
   myForm: FormGroup;
+  cargando: boolean = true;
+  edicion: boolean = false;
+  codigo: any;
 
   aranceles: Arancel[] = [];
 
@@ -44,7 +47,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-    this.ArancelesService.getAranceles()
+    this.ArancelesService.getConceptos()
       .subscribe(aranceles => {
         this.datosTabla(aranceles)
       })
@@ -55,9 +58,11 @@ export class DashboardComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(aranceles);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.cargando = false;
   }
 
   private errorBD(mensaje: string, clase: string) {
+    this.cargando = false;
     const dialogRef = this.dialog.open(StatusDatosComponent, {
       width: '600px',
       data: {
@@ -81,39 +86,85 @@ export class DashboardComponent implements AfterViewInit {
         duration: 3000,
     });
 
-    this.ArancelesService.getAranceles()
+    this.ArancelesService.getConceptos()
       .subscribe(aranceles => {
-        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al traer los conceptos de la base de datos!', 'error') }
+        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al mostrar los conceptos!', 'error') }
           else { this.datosTabla(aranceles) }
       });
   }
 
   addConcepto() {
-    this.ArancelesService.addArancel(this.myForm.value)
-      .subscribe(resp => {
-        if (resp.insertId != 0 ) { this.errorBD('¡Lo siento, a ocurrido un error al guardar el concepto en la base de dato!', 'error') }
-          else { this.actualizarTabla('¡Concepto agregado satisfactoriamente!') }
-      });
+    this.cargando = true;
+    if (this.edicion) { this.aplyUpdate(this.myForm.value) }
+      else {
+        this.ArancelesService.addConcepto(this.myForm.value)
+          .subscribe(resp => {
+            if (resp.insertId != 0 ) { this.errorBD('¡Lo siento, a ocurrido un error al guardar el concepto!', 'error') }
+              else {
+                this.actualizarTabla('¡Concepto agregado satisfactoriamente!');
+                this.myForm.reset();
+              }
+          });
+      }
   }
 
   deleteConcepto(arancel: Arancel) {
     const dialogRef = this.dialog.open(OpcionConceptoComponent, {
       width: '400px',
       data: {
-        mensaje: `¿Desea eliminar el concepto "${arancel.descripcion}" de la base de datos?`
+        mensaje: `¿Desea eliminar el concepto "${arancel.descripcion}"?`
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result != null ) {
-        this.ArancelesService.deleteArancel(arancel)
+        this.cargando = true;
+        this.ArancelesService.deleteConcepto(arancel)
           .subscribe(resp => {
-            if (resp.insertId != 0) { this.errorBD('¡Lo siento, a ocurrido un error al eliminar el concepto de la base de datos!', 'error') }
+            if (resp.insertId != 0) { this.errorBD('¡Lo siento, a ocurrido un error al eliminar el concepto!', 'error') }
               else { this.actualizarTabla('¡Concepto eliminado satisfactoriamente!') }
           });
       }
     });
+  }
 
+  updateConcepto(arancel: Arancel) {
+    const dialogRef = this.dialog.open(OpcionConceptoComponent, {
+      width: '400px',
+      data: {
+        mensaje: `¿Desea actualizar el concepto "${arancel.descripcion}"?`
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result != null) {
+        this.edicion = true;
+        this.codigo = arancel.codigo;
+        this.myForm.get('codigo').setValue(arancel.codigo);
+        this.myForm.get('codigo').disable();
+        this.myForm.get('descripcion').setValue(arancel.descripcion);
+        this.myForm.get('monto').setValue(arancel.monto);
+      }
+    })
+  }
+
+  cancelUpdate() {
+    this.edicion = false;
+    this.myForm.get('codigo').enable();
+    this.myForm.reset();
+  }
+
+  private aplyUpdate(arancel: Arancel) {
+    arancel.codigo = this.codigo;
+    this.ArancelesService.updateConcepto(arancel)
+      .subscribe(resp => {
+        if (resp.insertId != 0) { this.errorBD('¡Lo siento, a ocurrido un error al actualizar el concepto!', 'error') }
+          else {
+            this.actualizarTabla('¡Concepto actualizado satisfactoriamente!');
+            this.edicion = false;
+            this.myForm.get('codigo').enable();
+            this.myForm.reset();
+          }
+      })
   }
 }

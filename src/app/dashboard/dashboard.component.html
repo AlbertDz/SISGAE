@@ -21,7 +21,11 @@
 
             <mat-card-content>
                 <form [formGroup]="myForm" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <mat-form-field style="margin-right: 5px; width: 150px;">
+                    <button mat-icon-button color="warn" matTooltip="Cancelar" matTooltipPosition="right" *ngIf="edicion" (click)="cancelUpdate()" style="position: absolute; left: -15px; top: -15px">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+
+                    <mat-form-field style="margin-right: 5px; width: 130px;">
                         <input matInput placeholder="Codigo" formControlName="codigo" required>
                     </mat-form-field>
 
@@ -29,11 +33,13 @@
                         <input matInput placeholder="Concepto" formControlName="descripcion" required>
                     </mat-form-field>
 
-                    <mat-form-field style="margin: 0 5px; width: 150px;">
+                    <mat-form-field style="margin: 0 5px; width: 130px;">
                         <input type="number" matInput placeholder="Monto" formControlName="monto" required>
                     </mat-form-field>
 
-                    <button mat-mini-fab color="accent" [disabled]="myForm.invalid" style="margin-left: 5px; position: absolute; right: 0; top: 0;" (click)="addConcepto()">+</button>
+                    <button mat-mini-fab color="accent" [disabled]="myForm.invalid" style="margin-left: 5px;" (click)="addConcepto()">
+                        <mat-icon>done</mat-icon>
+                    </button>
                 </form>
 
                 <mat-form-field>
@@ -42,31 +48,28 @@
                 </mat-form-field>
 
                 <div class="">
+                  <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
                   <table mat-table [dataSource]="dataSource" matSort>
 
-                    <!-- ID Column -->
                     <ng-container matColumnDef="codigo">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
                       <td mat-cell *matCellDef="let row"> {{row.codigo}} </td>
                     </ng-container>
 
-                    <!-- Name Column -->
                     <ng-container matColumnDef="concepto">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header> Concepto </th>
                       <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
                     </ng-container>
 
-                    <!-- Progress Column -->
                     <ng-container matColumnDef="monto">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
                       <td mat-cell *matCellDef="let row"> {{row.monto | number: '.2'}} </td>
                     </ng-container>
 
-                    <!-- Color Column -->
                     <ng-container matColumnDef="opcion">
                       <th mat-header-cell *matHeaderCellDef></th>
                       <td mat-cell *matCellDef="let row">
-                        <button mat-icon-button color="accent" matTooltip="Editar" matTooltipPosition="left">
+                        <button mat-icon-button color="accent" matTooltip="Editar" matTooltipPosition="left" (click)="updateConcepto(row)">
                             <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
                         </button>
                         <button mat-icon-button color="warn" matTooltip="Eliminar" matTooltipPosition="right" (click)="deleteConcepto(row)">

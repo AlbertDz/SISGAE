@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, Inject} from '@angular/core';
+import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import {ArancelesService} from '../../services/aranceles/aranceles.service';
@@ -26,18 +26,27 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class ArancelComponent implements OnInit {
 
+  cargando: boolean = false;
+
   conceptos: Concepto[] = [];
   referencias: DatosReferencia[] = [];
+  planillas: DatoPlanilla[] = [];
   planilla: DatoPlanilla;
 
   total: number = 0.00;
   banco: number = 0.00;
   diferencia: number = 0.00;
 
-  estudiantes: Estudiante[];
   estudiante: Estudiante;
+  cedula: number;
+  buscar: boolean = false;
+  consultar: boolean = false;
+  verArancel: boolean = false;
+  verConsulta: boolean = false;
 
   displayedColumns: string[] = ['cedula', 'nombres', 'apellidos', 'postgrado', 'carrera'];
+  displayedColumn: string[] = ['cedula', 'nombre', 'postgrado', 'carrera', 'arancel', 'concepto'];
+  dataSources: MatTableDataSource<DatoPlanilla>;
   dataSource: MatTableDataSource<Estudiante>;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -51,37 +60,21 @@ export class ArancelComponent implements OnInit {
     private EstudiantesService: EstudiantesService,
     private BancosService: BancosService,
     private FormatosService: FormatosService,
-  ) {
-    this.EstudiantesService.getEstudiantes()
-      .subscribe(estudiantes => this.estudiantes = estudiantes);
-    this.dataSource = new MatTableDataSource(this.estudiantes);
-  }
+  ) {}
 
-  ngOnInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
+  ngOnInit() {}
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
-  openDialog(estudiante): void {
+  openDialog(estudiante: Estudiante): void {
     const dialogRef = this.dialog.open(DialogSelection, {
       width: '500px',
       data: {
         cedula: estudiante.cedula,
-        primerNombre: estudiante.primerNombre,
-        segundoNombre: estudiante.segundoNombre,
-        primerApellido: estudiante.primerApellido,
-        segundoApellido: estudiante.segundoApellido,
-        postgrado: estudiante.postgrado,
-        carrera: estudiante.carrera,
+        primer_nombre: estudiante.primer_nombre,
+        segundo_nombre: estudiante.segundo_nombre,
+        primer_apellido: estudiante.primer_apellido,
+        segundo_apellido: estudiante.segundo_apellido,
+        nombre_postgrado: estudiante.nombre_postgrado,
+        nombre_carrera: estudiante.nombre_carrera,
       }
     });
 
@@ -96,6 +89,60 @@ export class ArancelComponent implements OnInit {
         this.verPlanilla = true;
       }
     });
+  }
+
+  buscarEstudiante() {
+    this.cargando = true;
+
+    if (this.consultar) {
+      this.ArancelesService.getPlanillas(this.cedula)
+        .subscribe(planillas => this.planillas = planillas);
+      this.cargando = false;
+
+      if (this.planillas.length != 0) {
+        this.buscar = true;
+        this.verArancel = false;
+        this.verConsulta = true;
+        this.dataSources = new MatTableDataSource(this.planillas);
+        this.dataSources.paginator = this.paginator;
+        this.dataSources.sort = this.sort;
+      } else {
+        this.buscar = false;
+        const dialogRef = this.dialog.open(StatusDatosComponent, {
+          width: '600px',
+          data: {
+            mensaje: `¡No se han encontrado resultados de planillas para ${this.cedula}!`,
+            clase: 'error'
+          }
+        });
+      }
+    } else {
+      this.EstudiantesService.getEstudiante(this.cedula)
+        .subscribe(estudiante => {
+          this.cargando = false;
+
+          if (estudiante.length > 0) {
+            this.buscar = true;
+            this.verConsulta = false;
+            this.verArancel = true;
+            this.dataSource = new MatTableDataSource(estudiante);
+          } else {
+            this.buscar = false;
+            const dialogRef = this.dialog.open(StatusDatosComponent, {
+              width: '600px',
+              data: {
+                mensaje: `¡No se ha encontrado ningun estudiante para ${this.cedula}!`,
+                clase: 'error'
+              }
+            });
+          }
+        });
+    }
+  }
+
+  cargandoDatos(valor: boolean) {
+    this.cargando = false;
+    this.buscar = valor;
   }
 
   cancelar() {
@@ -156,13 +203,13 @@ export class ArancelComponent implements OnInit {
           {
             columns: [
               {width: '*', bold: true, text: `Cédula: ${this.estudiante.cedula}`},
-              {width: '*', bold: true, text: `Nombre: ${this.estudiante.primerNombre} ${this.estudiante.primerApellido}`},
+              {width: '*', bold: true, text: `Nombre: ${this.estudiante.primer_nombre} ${this.estudiante.primer_apellido}`},
             ]
           },
           {
             columns: [
-              {width: '*', bold: true, text: `Postgrado: ${this.estudiante.postgrado}`},
-              {width: '*', bold: true, text: `Area: ${this.estudiante.carrera}`},
+              {width: '*', bold: true, text: `Postgrado: ${this.estudiante.nombre_postgrado}`},
+              {width: '*', bold: true, text: `Area: ${this.estudiante.nombre_carrera}`},
             ]
           },
           {

@@ -8,6 +8,7 @@
           </mat-form-field>
 
           <div class="">
+            <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
             <table mat-table [dataSource]="dataSource" matSort>
 
               <ng-container matColumnDef="codigo">

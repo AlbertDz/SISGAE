@@ -15,10 +15,6 @@ export const MaterialRoutes: Routes = [
     component: ArancelesComponent
   },
   {
-    path: 'consulta',
-    component: ConsultarComponent
-  },
-  {
     path: 'grupos',
     component: GruposComponent
   },

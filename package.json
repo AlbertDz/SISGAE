@@ -31,6 +31,7 @@
     "core-js": "^2.6.11",
     "hammerjs": "^2.0.8",
     "ng-chartist": "4.1.0",
+    "ngx-cookie-service": "^3.0.4",
     "node-sass": "^4.13.1",
     "pdfmake": "^0.1.65",
     "rxjs": "^6.5.4",

@@ -9,9 +9,8 @@ export interface Menu {
 
 const MENUITEMS = [
   { state: 'inicio', name: 'Inicio', type: 'link', icon: 'home' },
-  { state: 'arancel', name: 'Arancel', type: 'link', icon: 'account_balance_wallet' },
+  { state: 'arancel', name: 'Arancel', type: 'link', icon: 'blur_circular' },
   { state: 'aranceles', name: 'Aranceles', type: 'link', icon: 'view_list' },
-  { state: 'consulta', name: 'Consulta', type: 'link', icon: 'blur_circular' },
   { state: 'grupos', name: 'Grupos', type: 'link', icon: 'view_comfy' },
 ];
 
