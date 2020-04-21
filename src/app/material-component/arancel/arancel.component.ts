@@ -52,7 +52,7 @@ export class ArancelComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  private verPlanilla: boolean = false;
+  verPlanilla: boolean = false;
 
   constructor(
     public dialog: MatDialog,
