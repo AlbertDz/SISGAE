@@ -36,7 +36,7 @@
                  
                 <div class="page-content">
                    
-                        <router-outlet><app-spinner></app-spinner></router-outlet>
+                        <router-outlet><app-loading *ngIf="isSpinnerVisible"></app-loading></router-outlet>
                     
                 </div>    
                

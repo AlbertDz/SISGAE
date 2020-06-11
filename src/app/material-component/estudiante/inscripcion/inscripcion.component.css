@@ -1,0 +1,31 @@
+mat-form-field {
+	padding: 0 10px;
+	width: 50%;
+}
+
+.position-relative {
+	position: relative;
+}
+
+.add-contact {
+	position: absolute;
+    right: 17px;
+    top: 57px;
+}
+
+table {
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+
+form {
+	width: 100%;
+}
+
+table tr:hover td {
+  background-color: #F5F5F5;
+  cursor: pointer;
+}

@@ -1,7 +1,8 @@
 <h3 mat-dialog-title>Ingrese la cantidad</h3>
 <div mat-dialog-content>
-  <mat-form-field>
-      <input type="number" min="1" matInput placeholder="Cantidad" [(ngModel)]="cantidad" autofocus required>
+  <mat-form-field appearance="outline">
+  	<mat-label>Cantidad</mat-label>
+    <input type="number" min="1" matInput placeholder="Cantidad" [(ngModel)]="cantidad" autofocus required>
   </mat-form-field>
 </div>
 <div mat-dialog-actions style="display: flex; justify-content: space-between;">

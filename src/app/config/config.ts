@@ -1,1 +1,1 @@
-export const URL_SERVICIOS = 'http://192.168.1.7:4000/api';
+export const URL_SERVICIOS = 'http://localhost:4000/api';

@@ -1,11 +1,11 @@
 <span class="m-r-20" style="font-size: 16px; font-weight: normal; text-transform: uppercase;">Los Teques - 12 de Marzo de 2020 - 08:17:38 PM</span>
 <button [matMenuTriggerFor]="profile" mat-icon-button class="m-r-5 profile-img"> <mat-icon>person</mat-icon> </button>
 <mat-menu #profile="matMenu" class="mymegamenu">
-    <button mat-menu-item>
+    <button mat-menu-item (click)="openConfig()">
         <mat-icon>settings</mat-icon> Configuraciones </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="openPerfil()">
         <mat-icon>account_box</mat-icon> Perfil </button>
-    <button mat-menu-item>
+    <button mat-menu-item (click)="closeSesion()">
         <mat-icon>exit_to_app</mat-icon> Cerrar sesión </button>
 </mat-menu>
 

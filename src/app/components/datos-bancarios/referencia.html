@@ -1,21 +1,25 @@
 <h3 mat-dialog-title>Referencia bancaria</h3>
 <div mat-dialog-content>
 	<form [formGroup]="myForm">
-		<mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Fecha</mat-label>
 	        <input type="date" matInput formControlName="fecha" placeholder="Fecha" required>
 	    </mat-form-field>
-		<mat-form-field> 
+		<mat-form-field appearance="outline"> 
+			<mat-label>Banco</mat-label>
 		    <input placeholder="Banco" aria-label="Number" [(ngModel)]="banco" matInput [formControl]="myControl" [matAutocomplete]="auto" required> 
 		    <mat-autocomplete #auto="matAutocomplete">
-		        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.nombre_banco">
-		        	{{option.nombre_banco}}
+		        <mat-option *ngFor="let option of filteredOptions | async" value="{{option.id_banco}}-{{option.nombre_banco}}">
+		        	{{option.id_banco}}-{{option.nombre_banco}}
 		        </mat-option> 
 		    </mat-autocomplete>
 		</mat-form-field>
-		<mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Referencia</mat-label>
 		    <input matInput formControlName="referencia" placeholder="Referencia" required>
 		</mat-form-field>
-		<mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Monto</mat-label>
 		    <input type="number" formControlName="monto" matInput min="0" placeholder="Monto" autofocus required>
 		</mat-form-field>	
 	</form>

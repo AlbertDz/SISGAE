@@ -10,6 +10,7 @@ import { ModalsModule } from '../modals/modals.module';
 
 import { PlanillaArancelesComponent, AddArancelesComponent, ConfirmarCantidad } from './planilla-aranceles/planilla-aranceles.component';
 import { DatosBancariosComponent, Referencia } from './datos-bancarios/datos-bancarios.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { DatosBancariosComponent, Referencia } from './datos-bancarios/datos-ban
   	AddArancelesComponent,
     ConfirmarCantidad,
     Referencia,
+    LoadingComponent,
   ],
   imports: [
     CommonModule,
@@ -32,6 +34,7 @@ import { DatosBancariosComponent, Referencia } from './datos-bancarios/datos-ban
   exports: [
   	PlanillaArancelesComponent,
   	DatosBancariosComponent,
+    LoadingComponent
   ],
   entryComponents: [
     AddArancelesComponent,

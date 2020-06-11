@@ -13,8 +13,7 @@ export class SesionCloseService implements CanActivate {
   ) { }
 
   canActivate(): boolean {
-    if ( this.cookie.get('token') ) {
-      alert('¡Debe cerrar sesión!');
+    if ( this.cookie.get('token') && localStorage.getItem('acceso') && localStorage.getItem('idUser') ) {
       this.router.navigate(['/inicio']);
       return false;
     } else {

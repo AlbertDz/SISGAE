@@ -1,0 +1,151 @@
+<app-loading *ngIf="procesandoPlanilla"></app-loading>
+
+<div fxLayout="row">
+	<div fxFlex.gt-sm="100%">
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Planilla de inscripción de cursos</mat-card-title>
+				<mat-card-subtitle>Périodo académico {{periodos[0].id_periodo}}</mat-card-subtitle>
+
+				<div fxLayout="row" *ngIf="estudiante">
+					<div fxFlex.gt-sm="50%">
+						<mat-list>
+							<mat-list-item>
+								<h3 matLine>Nombre: {{estudiante.primer_apellido}} {{estudiante.segundo_apellido}} {{estudiante.primer_nombre}} {{estudiante.segundo_nombre}}</h3>
+								<p matLine class="text-muted">Programa: {{estudiante.nombre_postgrado}}</p>
+							</mat-list-item>
+						</mat-list>
+					</div>
+					<div fxFlex.gt-sm="50%">
+						<mat-list>
+							<mat-list-item>
+								<h3 matLine>Cédula: {{estudiante.cedula}}</h3>
+								<p matLine class="text-muted">Carrera: {{estudiante.nombre_carrera}}</p>  
+							</mat-list-item>
+						</mat-list>
+					</div>
+				</div>
+
+				<mat-form-field appearance="outline" style="padding: 0 10px; min-width: 100px;">
+        			<mat-label>Situación</mat-label>
+                    <mat-select placeholder="Situación" (selectionChange)="selectSituacion($event)" [(ngModel)]="situacion">
+                        <mat-option value="0">Nuevo ingreso</mat-option>
+                        <mat-option value="1">Regular</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="padding: 0 10px; min-width: 100px;">
+        			<mat-label>Semestre</mat-label>
+                    <mat-select placeholder="Semestre" (selectionChange)="selectSemestre($event)" [(ngModel)]="semestre" [disabled]="situacion !== '1'">
+                        <mat-option *ngFor="let semestre of semestres" [value]="semestre.id_semestre">{{semestre.id_semestre}}°</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <table mat-table [dataSource]="dataSource" *ngIf="materias">
+
+				  <ng-container matColumnDef="position">
+				    <th mat-header-cell *matHeaderCellDef> N° </th>
+				    <td mat-cell *matCellDef="let row; let i = index;"> {{i+1}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="materia">
+				    <th mat-header-cell *matHeaderCellDef> Materia </th>
+				    <td mat-cell *matCellDef="let element"> {{element.nombre_materia}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="uc">
+				    <th mat-header-cell *matHeaderCellDef> UC </th>
+				    <td mat-cell *matCellDef="let element"> {{element.unidad_credito}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="modalidad">
+				    <th mat-header-cell *matHeaderCellDef> Modalidad </th>
+				    <td mat-cell *matCellDef="let element"> {{element.modalidad}} </td>
+				  </ng-container>
+
+				  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+				  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="inscribirMateria(row)">
+				  </tr>
+				</table>
+			</mat-card-content>        
+		</mat-card>
+
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Materias Inscritas</mat-card-title>
+
+				<table mat-table [dataSource]="dataSources">
+				  
+				  <ng-container matColumnDef="position">
+				    <th mat-header-cell *matHeaderCellDef> N° </th>
+				    <td mat-cell *matCellDef="let row; let i = index;"> {{i+1}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="materia">
+				    <th mat-header-cell *matHeaderCellDef> Materia </th>
+				    <td mat-cell *matCellDef="let element"> {{element.nombre_materia}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="uc">
+				    <th mat-header-cell *matHeaderCellDef> UC </th>
+				    <td mat-cell *matCellDef="let element"> {{element.unidad_credito}} </td>
+				  </ng-container>
+
+				  <ng-container matColumnDef="modalidad">
+				    <th mat-header-cell *matHeaderCellDef> Modalidad </th>
+				    <td mat-cell *matCellDef="let element"> {{element.modalidad}} </td>
+				  </ng-container>
+
+				  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+				  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="inscribirMateria(row)"></tr>
+				</table>
+
+				<div style="align-items: center; display: flex; justify-content: space-around;">
+					<p><strong style="margin-right: 5px;">Cursos inscritos:</strong>{{cantidadMaterias}}</p>
+				    <p><strong style="margin-right: 5px;">Creditos:</strong>{{unidadesCredito}}</p>
+				</div>
+			</mat-card-content>        
+		</mat-card>
+
+		<mat-card>
+			<mat-card-content>
+				<mat-card-title>Control administrativo</mat-card-title>
+				<mat-card-subtitle style="margin-top: 10px; display: flex;">
+					<mat-form-field appearance="outline" style="width: 150px; padding: 0;">
+		                <mat-label>N° Arancel</mat-label>
+		                <input matInput type="number" placeholder="N° Arancel" [(ngModel)]="arancel" required>
+		            </mat-form-field>
+		            <div style="margin-left: 10px; height: 100%; display: flex; align-items: center; margin-top: 10px;">
+						<button mat-raised-button color="accent" [disabled]="!arancel" (click)="buscarArancel()">Aceptar</button>
+					</div>
+				</mat-card-subtitle>
+
+				<mat-list role="list" *ngIf="datosArancel">
+				  <mat-list-item role="listitem" *ngFor="let dato of datosArancel"><strong style="margin-right: 5px;">Costo {{dato.descripcion}}:</strong>{{dato.monto | number: '.2'}}</mat-list-item>
+				  <mat-list-item role="listitem"><strong style="margin-right: 5px;">Total cancelar matricula:</strong>{{datosArancel[0].total_conceptos | number: '.2'}}</mat-list-item>
+				</mat-list>
+
+				<div style="text-align: right;">
+					<button mat-raised-button color="accent" [disabled]="materiasInscritas.length === 0 || datosArancel.length === 0" (click)="procesarInscripcion()" style="margin-top: 20px;">Procesar inscripción</button>
+				</div>
+			</mat-card-content>     
+		</mat-card>
+
+		<mat-card *ngIf="documentos.length !== 0">
+			<mat-progress-bar mode="indeterminate" *ngIf="procesandoDocumentos"></mat-progress-bar>
+			<mat-card-content>
+				<mat-card-title>Documentos pendientes por entregar</mat-card-title>
+
+				<mat-selection-list (selectionChange)="onSelection($event)">
+				  <mat-list-option *ngFor="let documento of documentos" [value]="documento">
+				    {{documento.nombre_documento}}
+				  </mat-list-option>
+				</mat-selection-list>
+
+				<div style="text-align: right;">
+					<button mat-raised-button color="accent" [disabled]="recaudos.length === 0" (click)="guardarDocumentos()" style="margin-top: 20px;">Guardar documentos</button>
+				</div>
+			</mat-card-content>        
+		</mat-card>
+	</div>
+</div>

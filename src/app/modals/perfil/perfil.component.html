@@ -1,0 +1,45 @@
+<h3 mat-dialog-title style="text-align: center;">Editar Perfil</h3>
+<div mat-dialog-content style="display: flex; justify-content: center;">
+	<div  *ngIf="cargando; else elseBlock" style="display: flex; justify-content: center; padding: 25px;">
+		<mat-spinner></mat-spinner>
+	</div>
+	<ng-template #elseBlock>
+		<form [formGroup]="myForm">
+			<mat-progress-bar mode="indeterminate" *ngIf="cambiandoDatos"></mat-progress-bar>
+			
+		    <mat-form-field appearance="outline">
+		      <mat-label>Primer Nombre</mat-label>
+		      <input matInput placeholder="Primer Nombre" formControlName="primer_nombre" required>
+		    </mat-form-field>
+
+		    <mat-form-field appearance="outline">
+		      <mat-label>Segundo Nombre</mat-label>
+		      <input matInput placeholder="Segundo Nombre" formControlName="segundo_nombre">
+		    </mat-form-field>
+
+		    <mat-form-field appearance="outline">
+		      <mat-label>Primer Apellido</mat-label>
+		      <input matInput placeholder="Primer Apellido" formControlName="primer_apellido" required>
+		    </mat-form-field>
+
+		    <mat-form-field appearance="outline">
+		      <mat-label>Segundo Apellido</mat-label>
+		      <input matInput placeholder="Segundo Apellido" formControlName="segundo_apellido">
+		    </mat-form-field>
+
+		    <mat-form-field appearance="outline">
+		      <mat-label>Cédula</mat-label>
+		      <input matInput type="number" placeholder="Cédula" formControlName="id_usuario" required>
+		    </mat-form-field>
+
+	        <mat-form-field appearance="outline">
+		      <mat-label>Cargo</mat-label>
+		      <input matInput placeholder="Cargo" formControlName="cargo" required>
+		    </mat-form-field>
+		</form>
+	</ng-template>
+</div>
+<div mat-dialog-actions style="display: flex; justify-content: space-between;">
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button (click)="actualizarUsuario()" cdkFocusInitial>Guardar</button>
+</div>

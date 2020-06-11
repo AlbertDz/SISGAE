@@ -1,0 +1,72 @@
+<mat-card>
+    <mat-card-content>
+    <mat-card-title>Carreras</mat-card-title>
+    <mat-card-subtitle *ngIf="postgrado">Gestión de carreras de {{postgrado.nombre_postgrado}}</mat-card-subtitle>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-content>
+		<form [formGroup]="myForm" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <button mat-icon-button color="warn" matTooltip="Cancelar" matTooltipPosition="right" *ngIf="edicion" (click)="cancelUpdate()" style="position: absolute; left: -15px; top: -15px">
+                <mat-icon>cancel</mat-icon>
+            </button>
+
+            <mat-form-field appearance="outline" style="margin-right: 5px;">
+                <mat-label>Carrera</mat-label>
+                <input matInput placeholder="Carrera" formControlName="nombre_carrera" required>
+            </mat-form-field>
+
+            <button mat-mini-fab color="accent" [disabled]="myForm.invalid" style="margin-left: 5px;" (click)="addCarrera()">
+                <mat-icon>done</mat-icon>
+            </button>
+        </form>
+
+		<mat-form-field appearance="outline">
+          <mat-label>Filtrar</mat-label>
+          <input matInput (keyup)="applyFilter($event)">
+        </mat-form-field>
+
+	    <div class="">
+	      <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+	      <table mat-table [dataSource]="dataSource" matSort>
+
+	      	<ng-container matColumnDef="numero">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> N° </th>
+	          <td mat-cell *matCellDef="let row; let i = index;"> {{i+1}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="carrera">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> Carrera </th>
+	          <td mat-cell *matCellDef="let row"> {{row.nombre_carrera}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="id">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+	          <td mat-cell *matCellDef="let row"> {{row.id_carrera}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="opcion">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let row">
+              	<button mat-icon-button color="accent" matTooltip="Ver" matTooltipPosition="left" routerLink="{{row.id_carrera}}/materias">
+                    <mat-icon aria-label="Example icon-button with a heart icon">visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" matTooltip="Editar" matTooltipPosition="left" (click)="updateCarrera(row)">
+                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Eliminar" matTooltipPosition="left" (click)="deleteCarrera(row)">
+                    <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+	        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	      </table>
+
+	      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+	    </div>
+	</mat-card-content>
+</mat-card>
+

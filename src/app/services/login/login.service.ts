@@ -28,7 +28,7 @@ export class LoginService {
   	private cookie: CookieService
   ) { }
 
-  login(datosLogin: Login): Observable<any> {
+  public login = (datosLogin: Login): Observable<any> => {
   	let url = `${URL_SERVICIOS}/login`;
 
     return this.http.post<Login>(url, datosLogin, this.httpOptions)
@@ -36,13 +36,14 @@ export class LoginService {
         catchError(this.handleError))
   }
 
-  setToken(token: string, acceso: string) { 
+  public setToken = (token: string, acceso: string, user: number): void => { 
     this.cookie.set('token', token, 60*60*24);
-    this.cookie.set('acceso', acceso, 60*60*24);
+    localStorage.setItem('acceso', acceso);
+    localStorage.setItem('idUser', user.toString());
   }
 
   // HANDLE ERROR
-  handleError(error) {
+  public handleError = (error): any => {
     let errorMessage = '';
     if(error.error instanceof ErrorEvent) { errorMessage = error.error.message }
       else { errorMessage = error };

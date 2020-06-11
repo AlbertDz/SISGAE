@@ -28,16 +28,23 @@ export class PlanillaArancelesComponent implements OnInit {
   dataSource: MatTableDataSource<Concepto>;
 
   @Input() estudiante: Estudiante;
+  @Input() periodo: string;
+  @Input() consultar: boolean;
+  @Input() totalConcepto: number;
   @Output() total = new EventEmitter<number>();
 
   constructor(
-      public dialog: MatDialog,
-      private ArancelesService: ArancelesService,
-    ) {
-    
+    public dialog: MatDialog,
+    private ArancelesService: ArancelesService,
+  ) {
   }
 
-  openDialog(): void {
+  ngOnInit() {
+    this.dataSource = new MatTableDataSource(this.ArancelesService.CONCEPTOS);
+    (this.consultar) ?this.montoTotal=this.totalConcepto :this.totalConcepto;
+  }
+
+  public openDialog = (): void => {
     const dialogRef = this.dialog.open(AddArancelesComponent, {
       width: '700px',
     });
@@ -56,11 +63,7 @@ export class PlanillaArancelesComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.dataSource = new MatTableDataSource(this.ArancelesService.CONCEPTOS);
-  }
-
-  borrar(concepto: Concepto): void {
+  public borrar = (concepto: Concepto): void => {
     const dialogRef = this.dialog.open(OpcionConceptoComponent, {
       width: '400px',
       data: {
@@ -82,7 +85,7 @@ export class PlanillaArancelesComponent implements OnInit {
     });
   }
 
-  enviarTotal(valor: number) {
+  public enviarTotal = (valor: number): void => {
     this.total.emit(valor);
   }
 
@@ -108,12 +111,22 @@ export class AddArancelesComponent implements OnInit {
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   constructor(
-      public dialogRef: MatDialogRef<AddArancelesComponent>,
-      private ArancelesService: ArancelesService,
-      public dialog: MatDialog,
-    ) {}
+    public dialogRef: MatDialogRef<AddArancelesComponent>,
+    private ArancelesService: ArancelesService,
+    public dialog: MatDialog,
+  ) {}
 
-  openDialog(arancel: Arancel): void {
+  ngOnInit() {
+    this.ArancelesService.getConceptos()
+      .subscribe(aranceles => {
+        this.cargando = false;
+
+        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al mostrar los conceptos!', 'error') }
+          else { this.datosTabla(aranceles) };
+      });
+  }
+
+    public openDialog = (arancel: Arancel): void => {
     const dialogRef = this.dialog.open(ConfirmarCantidad, {
       width: '250px',
     });
@@ -135,28 +148,18 @@ export class AddArancelesComponent implements OnInit {
     });
   }
 
-  onNoClick(): void {
+  public onNoClick = (): void => {
     this.dialogRef.close();
   }
 
-  ngOnInit() {
-    this.ArancelesService.getConceptos()
-      .subscribe(aranceles => {
-        this.cargando = false;
-
-        if (!aranceles.length) { this.errorBD('¡Lo siento, a ocurrido un error al mostrar los conceptos!', 'error') }
-          else { this.datosTabla(aranceles) };
-      });
-  }
-
-  private datosTabla(aranceles: Arancel[]) {
+  private datosTabla = (aranceles: Arancel[]): void => {
     this.aranceles = aranceles;
     this.dataSource = new MatTableDataSource(aranceles);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  private errorBD(mensaje: string, clase: string) {
+  private errorBD = (mensaje: string, clase: string): void => {
     const dialogRef = this.dialog.open(StatusDatosComponent, {
       width: '600px',
       data: {
@@ -166,7 +169,7 @@ export class AddArancelesComponent implements OnInit {
     });
   }
 
-  applyFilter(event: Event) {
+  public applyFilter = (event: Event): void => {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
@@ -191,11 +194,10 @@ export class ConfirmarCantidad implements OnInit {
   constructor(public dialogRef: MatDialogRef<ConfirmarCantidad>) {
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
   ngOnInit() {
   }
 
+  public onNoClick = (): void => {
+    this.dialogRef.close();
+  }
 }

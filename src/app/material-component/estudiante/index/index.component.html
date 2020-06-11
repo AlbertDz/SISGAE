@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+  <mat-card-content>
+    <mat-card-title style="display: flex; justify-content: space-between;">
+      <div>Estudiante</div>
+    </mat-card-title>
+    <mat-card-subtitle>Gestion de procesos estudiantiles</mat-card-subtitle>
+
+    <form [formGroup]="myForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Cédula</mat-label>
+        <input matInput type="number" placeholder="Cédula" formControlName="cedula" required>
+      </mat-form-field>
+      <p *ngIf="myForm.get('cedula').errors && myForm.get('cedula').dirty" style="color: red;">
+      	Lo siento, no existe un estudiante con esta cédula
+      </p>
+    </form>
+
+	<button mat-raised-button color="accent" routerLink="nuevo-ingreso" class="m-5" [disabled]="!myForm.invalid">Nuevo ingreso</button>
+	<button mat-raised-button color="accent" routerLink="inscripcion/{{myForm.get('cedula').value}}" class="m-5" [disabled]="myForm.invalid">Inscripción</button>
+	<!-- <button mat-raised-button color="accent" routerLink="constancia-inscripcion/{{myForm.get('cedula').value}}" class="m-5" [disabled]="myForm.invalid">Constancia de inscripción</button>
+	<button mat-raised-button color="accent" routerLink="constancia-estudio/{{myForm.get('cedula').value}}" class="m-5" [disabled]="myForm.invalid">Constancia de estudio</button>
+	<button mat-raised-button color="accent" routerLink="record/{{myForm.get('cedula').value}}" class="m-5" [disabled]="myForm.invalid">Record Academico</button>
+	<button mat-raised-button color="accent" routerLink="horario/{{myForm.get('cedula').value}}" class="m-5" [disabled]="myForm.invalid">Horario</button> -->
+  </mat-card-content>
+</mat-card>

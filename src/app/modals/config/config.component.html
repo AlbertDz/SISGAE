@@ -1,0 +1,60 @@
+<h3 mat-dialog-title style="text-align: center;">Configuraciones</h3>
+<div mat-dialog-content style="display: flex; justify-content: center;">
+	<div  *ngIf="cargando; else elseBlock" style="display: flex; justify-content: center; padding: 25px;">
+		<mat-spinner></mat-spinner>
+	</div>
+	<ng-template #elseBlock>
+		<form [formGroup]="myForm" style="padding: 10px 0; width: 100%;">
+		    <mat-accordion class="example-headers-align">
+			  <mat-expansion-panel expanded="true">
+			    <mat-expansion-panel-header>
+			      <mat-panel-title>Contraseña</mat-panel-title>
+			      <mat-panel-description style="display: flex; justify-content: flex-end;"><mat-icon>https</mat-icon></mat-panel-description>
+			    </mat-expansion-panel-header>
+
+			    <mat-progress-bar mode="indeterminate" *ngIf="cambiandoDatos"></mat-progress-bar>
+
+			    <mat-form-field appearance="outline" style="width: 100%;">
+			      	<mat-label>Nueva Contraseña</mat-label>
+			      	<input matInput [type]="hide ? 'password' : 'text'" placeholder="Nueva Contraseña" formControlName="password" required>
+				    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+				    <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+				    </button>
+			    </mat-form-field>
+
+			    <mat-action-row>
+					<button mat-button color="primary" (click)="cambiarPass()" [disabled]="validar(myForm.get('password'))">Cambiar Contraseña</button>
+			    </mat-action-row>
+			  </mat-expansion-panel>
+
+			  <mat-expansion-panel>
+			    <mat-expansion-panel-header>
+			      <mat-panel-title>Pregunta/Respuesta</mat-panel-title>
+			      <mat-panel-description style="display: flex; justify-content: flex-end;"><mat-icon>help_outline</mat-icon></mat-panel-description>
+			    </mat-expansion-panel-header>
+
+			    <mat-progress-bar mode="indeterminate" *ngIf="cambiandoDatos"></mat-progress-bar>
+
+			    <mat-form-field appearance="outline">
+			      <mat-label>Pregunta</mat-label>
+			      <input matInput placeholder="Pregunta" formControlName="pregunta" required>
+			    </mat-form-field>
+
+			    <mat-form-field appearance="outline">
+			      <mat-label>Respuesta</mat-label>
+			      <input matInput placeholder="Respuesta" formControlName="respuesta" required>
+			    </mat-form-field>
+
+			    <mat-action-row>
+			      <button mat-button color="primary" (click)="cambiarPreguntaRespuesta()" [disabled]="validar(myForm.get('pregunta')) || validar(myForm.get('respuesta'))">Cambiar Pregunta/Respuesta</button>
+			    </mat-action-row>
+			  </mat-expansion-panel>
+
+			</mat-accordion>
+		</form>
+	</ng-template>
+</div>
+<div mat-dialog-actions style="display: flex; justify-content: space-between;">
+  <button mat-button (click)="onNoClick()" cdkFocusInitial>Cerrar</button>
+</div>
+

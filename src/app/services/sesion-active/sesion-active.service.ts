@@ -9,14 +9,13 @@ export class SesionActiveService implements CanActivate {
 
   constructor(
     private router: Router,
-      private cookie: CookieService,
+    private cookie: CookieService,
   ) { }
 
   canActivate(): boolean {
-    if ( this.cookie.get('token') ) {
+    if ( this.cookie.get('token') && localStorage.getItem('acceso') && localStorage.getItem('idUser') ) {
       return true;
     } else {
-      alert('¡Debe iniciar sesión!');
       this.router.navigate(['/login']);
       return false;
     }

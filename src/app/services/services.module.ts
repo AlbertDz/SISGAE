@@ -7,6 +7,12 @@ import { ArancelesService } from './aranceles/aranceles.service';
 import { EstudiantesService } from './estudiantes/estudiantes.service';
 import { BancosService } from './bancos/bancos.service';
 import { FormatosService } from './formatos/formatos.service';
+import { SesionAnalistaService } from './sesion-active/sesion-analista.service';
+import { SesionControlService } from './sesion-active/sesion-control.service';
+import { PeriodoService } from './periodo/periodo.service';
+import { PostgradoService } from './postgrado/postgrado.service';
+import { CarreraService } from './carrera/carrera.service';
+import { ValidationsService }from './validaciones/validations.service';
 
 @NgModule({
   declarations: [],
@@ -20,7 +26,13 @@ import { FormatosService } from './formatos/formatos.service';
   	EstudiantesService,
     BancosService,
     FormatosService,
-    SesionCloseService
+    SesionCloseService,
+    SesionAnalistaService,
+    SesionControlService,
+    PeriodoService,
+    PostgradoService,
+    CarreraService,
+    ValidationsService,
   ]
 })
 export class ServicesModule { }

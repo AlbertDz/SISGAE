@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DemoMaterialModule } from './demo-material-module';
 import { CookieService } from 'ngx-cookie-service';
 import { ModalsModule } from './modals/modals.module';
+import { ComponentsModule } from './components/components.module';
 
 import { SharedModule } from './shared/shared.module';
 import { SpinnerComponent } from './shared/spinner.component';
@@ -39,7 +40,8 @@ import { LoginComponent } from './login/login.component';
     SharedModule,
     RouterModule.forRoot(AppRoutes, { scrollPositionRestoration: 'enabled' }),
     ReactiveFormsModule,
-    ModalsModule
+    ModalsModule,
+    ComponentsModule,
   ],
   providers: [
     CookieService,

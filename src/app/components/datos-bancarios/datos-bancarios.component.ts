@@ -29,19 +29,24 @@ export class DatosBancariosComponent implements OnInit {
 
   @Input() montoTotal: number;
   @Input() montoDiferencia: number;
+  @Input() consultar: boolean;
+  @Input() banco: number; 
   @Output() totalBanco = new EventEmitter<number>();
   @Output() procesar = new EventEmitter<boolean>();
+  @Output() pdf = new EventEmitter<number>();
 
   constructor(
     public dialog: MatDialog,
     private BancosService: BancosService,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.datosBancarios = new MatTableDataSource(this.BancosService.DATOS_BANCARIOS);
+    (this.consultar) ?this.montoBanco=this.banco :this.montoBanco;
   }
 
-  openDialog(): void {
+  public openDialog = (): void => {
     const dialogRef = this.dialog.open(Referencia, {
       width: '600px',
     });
@@ -58,7 +63,7 @@ export class DatosBancariosComponent implements OnInit {
     });
   }
 
-  borrar(referencia: DatosReferencia): void {
+  public borrar = (referencia: DatosReferencia): void => {
     const dialogRef = this.dialog.open(OpcionConceptoComponent, {
       width: '400px',
       data: {
@@ -80,15 +85,15 @@ export class DatosBancariosComponent implements OnInit {
     });
   }
 
-  enviarTotal(valor: number) {
+  public enviarTotal = (valor: number): void => {
     this.totalBanco.emit(valor);
   }
 
-  procesarPlanilla(): void {
+  public procesarPlanilla = (): void => {
     const dialogRef = this.dialog.open(OpcionConceptoComponent, {
       width: '400px',
       data: {
-        mensaje: 'Antes de continuar verifique que todos los datos sean correctos.\n\n ¿Desea continuar?'
+        mensaje: 'Antes de continuar verifique que todos los datos sean correctos. ¿Desea continuar?'
       }
     });
 
@@ -97,6 +102,10 @@ export class DatosBancariosComponent implements OnInit {
         this.procesar.emit(true);
       }
     });
+  }
+
+  public verPDF = (valor: number): void => {
+    this.pdf.emit(valor);
   }
 
 }
@@ -138,25 +147,29 @@ export class Referencia implements OnInit {
     );
   }
 
-  private _filter(value: string): Banco[] {
+  private _filter = (value: string): Banco[] => {
     const filterValue = value.toLowerCase();
 
     return this.bancos.filter(option => option.nombre_banco.toLowerCase().includes(filterValue));
   }
 
-  onNoClick(): void {
+  public onNoClick = (): void => {
     this.dialogRef.close();
   }
 
-  enviarDatos() {
+  public enviarDatos = (): void => {
     if((this.myForm.invalid) && (this.banco != '')) {
       this._snackBar.open('¡Debe llenar todos los campos!', '', {
         duration: 3000,
       });
     } else {
+      const datosBanco = this.banco.split('-');
+      const idBanco = parseInt(datosBanco[0]);
+      const nombreBanco = datosBanco[1];
       this.datos = {
+        id: idBanco,
         fecha: this.myForm.value.fecha,
-        banco: this.banco,
+        banco: nombreBanco,
         referencia: this.myForm.value.referencia,
         monto: this.myForm.value.monto,
       }
@@ -164,7 +177,7 @@ export class Referencia implements OnInit {
     }
   }
 
-  getBancos() {
+  private getBancos = (): void => {
     this.BancosService.getBancos()
       .subscribe(bancos => this.bancos = bancos);
   }

@@ -1,0 +1,97 @@
+<mat-card>
+    <mat-card-content>
+    <mat-card-title>Materias</mat-card-title>
+    <mat-card-subtitle *ngIf="carrera">Gestión de materias para {{carrera.nombre_carrera}}</mat-card-subtitle>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+	<mat-card-content>
+		<form [formGroup]="myForm" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <button mat-icon-button color="warn" matTooltip="Cancelar" matTooltipPosition="right" *ngIf="edicion" (click)="cancelUpdate()" style="position: absolute; left: -15px; top: -15px">
+                <mat-icon>cancel</mat-icon>
+            </button>
+
+            <mat-form-field appearance="outline" style="margin-right: 5px;">
+                <mat-label>Materia</mat-label>
+                <input matInput placeholder="Materia" formControlName="nombre_materia" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="margin-right: 5px; width: 200px;">
+                <mat-label>Unidad Credito</mat-label>
+                <input matInput type="number" placeholder="Unidad Credito" formControlName="unidad_credito" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="margin-right: 5px;">
+                <mat-label>Modalidad</mat-label>
+                <input matInput placeholder="Modalidad" formControlName="modalidad" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="padding: 0 10px; min-width: 100px;">
+    			<mat-label>Semestre</mat-label>
+                <mat-select placeholder="Semestre" formControlName="id_semestre">
+                    <mat-option *ngFor="let semestre of semestres" [value]="semestre.id_semestre">{{semestre.id_semestre}}°</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button mat-mini-fab color="accent" [disabled]="myForm.invalid" style="margin-left: 5px;" (click)="addMateria()">
+                <mat-icon>done</mat-icon>
+            </button>
+        </form>
+
+		<mat-form-field appearance="outline">
+          <mat-label>Filtrar</mat-label>
+          <input matInput (keyup)="applyFilter($event)">
+        </mat-form-field>
+
+	    <div class="">
+	      <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+	      <table mat-table [dataSource]="dataSource" matSort>
+
+	      	<ng-container matColumnDef="numero">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> N° </th>
+	          <td mat-cell *matCellDef="let row; let i = index;"> {{i+1}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="materia">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> Materia </th>
+	          <td mat-cell *matCellDef="let row"> {{row.nombre_materia}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="uc">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> UC </th>
+	          <td mat-cell *matCellDef="let row"> {{row.unidad_credito}} </td>
+	        </ng-container>
+
+	        <ng-container matColumnDef="modalidad">
+	          <th mat-header-cell *matHeaderCellDef mat-sort-header> Modalidad </th>
+	          <td mat-cell *matCellDef="let row"> {{row.modalidad}} </td>
+	        </ng-container>
+
+            <ng-container matColumnDef="semestre">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Semestre </th>
+              <td mat-cell *matCellDef="let row"> {{row.id_semestre}}° </td>
+            </ng-container>
+
+	        <ng-container matColumnDef="opcion">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-icon-button color="accent" matTooltip="Editar" matTooltipPosition="left" (click)="updateMateria(row)">
+                    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Eliminar" matTooltipPosition="left" (click)="deleteMateria(row)">
+                    <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+	        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+	      </table>
+
+	      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+	    </div>
+	</mat-card-content>
+</mat-card>
+
+

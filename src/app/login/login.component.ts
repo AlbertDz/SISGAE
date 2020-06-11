@@ -5,6 +5,7 @@ import { StatusDatosComponent } from '../modals/status-datos/status-datos.compon
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { RecoverComponent } from '../modals/recover/recover.component';
 
 @Component({
   selector: 'app-login',
@@ -31,12 +32,12 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  login() {
+  public login = (): void => {
     this.cargando = true;
 
   	this.loginService.login(this.myForm.value)
   		.subscribe(resp => {
-          this.cargando = false;
+        this.cargando = false;
 
   			if (resp.mensaje) {
   				const dialogRef = this.dialog.open(StatusDatosComponent, {
@@ -48,9 +49,9 @@ export class LoginComponent implements OnInit {
 			    });
   			} else {
   				if (resp.tokenAnalista) {
-  					this.loginService.setToken(resp.tokenAnalista, 'analista');
+  					this.loginService.setToken(resp.tokenAnalista, '0', this.myForm.value.cedula);
   				} else {
-  					this.loginService.setToken(resp.tokenControlEstudio, 'control-estudio');
+  					this.loginService.setToken(resp.tokenControlEstudio, '1', this.myForm.value.cedula);
   				}
 
           this._snackBar.open('¡felicidades a iniciado sesión!', '', {
@@ -61,4 +62,9 @@ export class LoginComponent implements OnInit {
   		})
   }
 
+  public openDialog = (): void => {
+    const dialogRef = this.dialog.open(RecoverComponent, {
+      width: '800px',
+    });
+  }
 }

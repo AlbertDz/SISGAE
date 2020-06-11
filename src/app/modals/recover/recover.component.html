@@ -1,0 +1,59 @@
+<h3 mat-dialog-title style="text-align: center;">Recuperar contraseña</h3>
+<div mat-dialog-content style="display: flex; justify-content: center;">
+	<mat-horizontal-stepper linear #stepper>
+	  <mat-step [stepControl]="primerFormGroup">
+	    <form [formGroup]="primerFormGroup">
+	      <ng-template matStepLabel>Ingrese su cédula</ng-template>
+	      <mat-form-field appearance="outline">
+	        <mat-label>Cédula</mat-label>
+	        <input matInput type="number" placeholder="Cédula" formControlName="cedula" required>
+	      </mat-form-field>
+	      <p *ngIf="primerFormGroup.get('cedula').errors && primerFormGroup.get('cedula').dirty" style="color: red;">
+	      	Lo siento, no existe un usuario con esta cédula
+	      </p>
+	      <div>
+	        <button mat-button matStepperNext>Siguiente</button>
+	      </div>
+	    </form>
+	  </mat-step>
+
+	  <mat-step [stepControl]="segundoFormGroup">
+	    <form [formGroup]="segundoFormGroup">
+	      <ng-template matStepLabel>Responda la pregunta</ng-template>
+	      <mat-form-field appearance="outline">
+	        <mat-label>{{pregunta}}</mat-label>
+	        <input matInput formControlName="respuesta" [placeholder]="pregunta" required>
+	      </mat-form-field>
+	      <!-- <p *ngIf="segundoFormGroup?.respuestaValidator && segundoFormGroup.get('respuesta').errors && segundoFormGroup.get('respuesta').dirty)" style="color: red;">Respuesta incorrecta</p> -->
+	      <div>
+	        <button mat-button matStepperPrevious>Atras</button>
+	        <button mat-button matStepperNext [disabled]="segundoFormGroup.invalid">Siguiente</button>
+	      </div>
+	    </form>
+	  </mat-step>
+
+	  <mat-step [stepControl]="tercerFormGroup">
+	  	<form [formGroup]="tercerFormGroup">
+		    <ng-template matStepLabel>Nueva contraseña</ng-template>
+		    <mat-form-field appearance="outline">
+		        <mat-label>Nueva contraseña</mat-label>
+		        <input matInput type="password" formControlName="newPass" placeholder="Nueva contraseña" required>
+		      </mat-form-field>
+		      <p *ngIf="tercerFormGroup.get('newPass').errors && tercerFormGroup.get('newPass').dirty" style="color: red;">
+		      	La contraseña debe tener al menos 8 caracteres
+		      </p>
+		      <mat-form-field appearance="outline">
+		        <mat-label>Repita la contraseña</mat-label>
+		        <input matInput type="password" formControlName="repeatPass" placeholder="Repita la contraseña" required>
+		      </mat-form-field>
+              <p *ngIf="tercerFormGroup?.passwordMatchValidator && tercerFormGroup.get('repeatPass').errors && tercerFormGroup.get('repeatPass').dirty" style="color: red;">
+                    Las claves deben ser iguales.
+              </p>
+		    <div>
+		      <button mat-button matStepperPrevious>Atras</button>
+		      <button mat-button [disabled]="tercerFormGroup.invalid">Procesar</button>
+		    </div>
+		</form>
+	  </mat-step>
+	</mat-horizontal-stepper>
+</div>

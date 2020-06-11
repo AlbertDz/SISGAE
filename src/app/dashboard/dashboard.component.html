@@ -7,33 +7,34 @@
                 <div class="pro-img">
                     <img src="assets/images/users/user.png" width="100" alt="user" class="img-circle">
                 </div>
-                <h3 class="m-b-0">Bienvenid@ Gustavo Gonzalez</h3>
-                <h6 class="m-t-0">Ultima sesión 11/03/2020 10:30 AM</h6>
+                <h3 class="m-b-0">Bienvenid@ {{usuario}}</h3>
                 <mat-card-actions>
-                    <button mat-raised-button color="accent">Perfil</button>
+                    <button mat-raised-button color="accent" (click)="openDialog()">Perfil</button>
                 </mat-card-actions>
             </mat-card-content>
         </mat-card>
     </div>
 
     <div fxFlex.gt-lg="75" fxFlex.gt-md="60" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-
+        <mat-card *ngIf="acceso === '0'; else elseBlock">
             <mat-card-content>
                 <form [formGroup]="myForm" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <button mat-icon-button color="warn" matTooltip="Cancelar" matTooltipPosition="right" *ngIf="edicion" (click)="cancelUpdate()" style="position: absolute; left: -15px; top: -15px">
                         <mat-icon>cancel</mat-icon>
                     </button>
 
-                    <mat-form-field style="margin-right: 5px; width: 130px;">
+                    <mat-form-field appearance="outline" style="margin-right: 5px; width: 130px;">
+                        <mat-label>Codigo</mat-label>
                         <input matInput placeholder="Codigo" formControlName="codigo" required>
                     </mat-form-field>
 
-                    <mat-form-field style="margin: 0 5px;">
+                    <mat-form-field appearance="outline" style="margin: 0 5px;">
+                        <mat-label>Concepto</mat-label>
                         <input matInput placeholder="Concepto" formControlName="descripcion" required>
                     </mat-form-field>
 
-                    <mat-form-field style="margin: 0 5px; width: 130px;">
+                    <mat-form-field appearance="outline" style="margin: 0 5px; width: 130px;">
+                        <mat-label>Monto</mat-label>
                         <input type="number" matInput placeholder="Monto" formControlName="monto" required>
                     </mat-form-field>
 
@@ -42,12 +43,12 @@
                     </button>
                 </form>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
                   <mat-label>Filtrar</mat-label>
                   <input matInput (keyup)="applyFilter($event)">
                 </mat-form-field>
 
-                <div class="">
+                <div>
                   <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
                   <table mat-table [dataSource]="dataSource" matSort>
 
@@ -87,5 +88,52 @@
                 </div>
             </mat-card-content>
         </mat-card>
+
+        <ng-template #elseBlock>
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Filtrar</mat-label>
+                      <input matInput (keyup)="applyFilter($event)">
+                    </mat-form-field>
+
+                    <div>
+                      <mat-progress-bar mode="indeterminate" *ngIf="cargando"></mat-progress-bar>
+                      <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="codigo">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                          <td mat-cell *matCellDef="let row"> {{row.id_materia}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="concepto">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Materia </th>
+                          <td mat-cell *matCellDef="let row"> {{row.nombre_materia}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="monto">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> UC </th>
+                          <td mat-cell *matCellDef="let row"> {{row.unidad_credito}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="opcion">
+                            <th mat-header-cell *matHeaderCellDef></th>
+                            <td mat-cell *matCellDef="let row">
+                                <button mat-icon-button color="accent" matTooltip="Ver" matTooltipPosition="left">
+                                    <mat-icon aria-label="Example icon-button with a heart icon">visibility</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                      </table>
+
+                      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </ng-template>
     </div>
 </div>
